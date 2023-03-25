@@ -1,6 +1,12 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import Joi from "joi";
 dotenv.config();
+const schema = Joi.object({
+    name: Joi.string().required().messages({ "string.empty": "Không được để trống" }, { "any.required": "Bắt buộc" }),
+    username: Joi.string().required(),
+    email: Joi.string().required()
+});
 import { Product } from "../models/product";
 export const getAll = async (req, res) => {
     try {
@@ -30,11 +36,20 @@ export const getDetail = async (req, res) => {
         }
         return res.status(200).json(product);
     } catch (err) {
+        if (err.name === "CastError") {
+            return res.status(400).json({ message: "Id không hợp lệ" });
+        }
         res.status(500).json({ messenger: err });
     }
 };
 
 export const create = async (req, res) => {
+
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) {
+        // const errors = error.details.map(err => err.message)
+        return res.status(400).json({ message: error });
+    }
     try {
         // const { data: product } = await axios.post(`${API_URI}`, req.body);
         const products = await Product.create(req.body);
@@ -45,6 +60,7 @@ export const create = async (req, res) => {
         }
         return res.json(products);
     } catch (err) {
+
         res.status(500).json({ messenger: err });
     }
 };
@@ -57,7 +73,10 @@ export const remove = async (req, res) => {
             message: "Sản phẩm đã được xóa thành công",
         });
     } catch (error) {
-        return res.status(500).json({
+        if (error.name === "CastError") {
+            return res.status(400).json({ message: "Id không hợp lệ" });
+        }
+        res.status(500).json({
             message: error,
         });
     }
@@ -77,6 +96,9 @@ export const update = async (req, res) => {
         }
         return res.status(200).json(product);
     } catch (err) {
+        if (err.name === "CastError") {
+            return res.status(400).json({ message: "Id không hợp lệ" });
+        }
         res.status(500).json({ messenger: err });
     }
 };
