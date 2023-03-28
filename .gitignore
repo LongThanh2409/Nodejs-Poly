@@ -1,4 +1,4 @@
-node_modules
-package-lock.json
-.env
-text.tex
+/node_modules
+/package-lock.json
+/.env
+/text.tex
