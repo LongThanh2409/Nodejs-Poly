@@ -1,5 +1,6 @@
 import express from "express";
 import routerProduct from "./routes/product.js";
+import routerUser from "./routes/auth.js";
 
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -8,8 +9,9 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-mongoose.connect('mongodb://127.0.0.1:27017/we174304')
+mongoose.connect(`${process.env.API_DB}`)
 app.use("/api", routerProduct);
+app.use("/api", routerUser);
 export const viteNodeApp = app;
 // app.listen(process.env.PORT, () => {
 //     console.log(`Server is running on ${process.env.PORT}`);

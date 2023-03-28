@@ -1,12 +1,8 @@
 import axios from "axios";
 import dotenv from "dotenv";
-import Joi from "joi";
+import { schema } from "../schemas/schema.js"
 dotenv.config();
-const schema = Joi.object({
-    name: Joi.string().required().messages({ "string.empty": "Không được để trống" }, { "any.required": "Bắt buộc" }),
-    username: Joi.string().required(),
-    email: Joi.string().required()
-});
+
 import { Product } from "../models/product";
 export const getAll = async (req, res) => {
     try {
@@ -47,8 +43,8 @@ export const create = async (req, res) => {
 
     const { error } = schema.validate(req.body, { abortEarly: false });
     if (error) {
-        // const errors = error.details.map(err => err.message)
-        return res.status(400).json({ message: error });
+        const errors = error.details.map(err => err.message)
+        return res.status(400).json({ message: errors });
     }
     try {
         // const { data: product } = await axios.post(`${API_URI}`, req.body);
@@ -88,7 +84,7 @@ export const update = async (req, res) => {
         //     `${API_URI}${req.params.id}`,
         //     req.body
         // );
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const product = await Product.findByIdAndDelete(req.params.id, req.body, { new: true });
         if (!product) {
             res.send({
                 messenger: "Update sản phẩm không thành công",
@@ -102,3 +98,20 @@ export const update = async (req, res) => {
         res.status(500).json({ messenger: err });
     }
 };
+export const PatchUser = async (req, res) => {
+
+    try {
+        // const { data: users } = await axios.patch(
+        //     `${API_URL}${req.params.id}`, req.body
+        // )
+        const product = await Product.findOneAndReplace(req.params.id, req.body, { new: true });
+
+        return res.status(200).json(product);
+    }
+    catch (err) {
+        if (err.name === "CastError") {
+            return res.status(400).json({ message: "Id không hợp lệ" });
+        }
+        res.status(500).json({ messenger: err })
+    }
+}
