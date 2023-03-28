@@ -12,6 +12,9 @@ app.use(express.json());
 mongoose.connect(`${process.env.API_DB}`)
 app.use("/api", routerProduct);
 app.use("/api", routerUser);
+app.use(cors({
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+}));
 export const viteNodeApp = app;
 // app.listen(process.env.PORT, () => {
 //     console.log(`Server is running on ${process.env.PORT}`);
