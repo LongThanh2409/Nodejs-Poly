@@ -84,7 +84,7 @@ export const update = async (req, res) => {
         //     `${API_URI}${req.params.id}`,
         //     req.body
         // );
-        const product = await Product.findByIdAndDelete(req.params.id, req.body, { new: true });
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!product) {
             res.send({
                 messenger: "Update sản phẩm không thành công",

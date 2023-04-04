@@ -1,7 +1,10 @@
 import bcrypt from "bcryptjs"
 import { schema_sigup, schema_login } from "../schemas/schema_user.js"
-
-import { User } from "../models/user.js";
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
+import dotenv from "dotenv";
+dotenv.config();
+const { SECRET_CODE } = process.env;
 export const user_sigup = async (req, res) => {
 
 
@@ -35,7 +38,7 @@ export const user_sigup = async (req, res) => {
         return res.json(user);
     } catch (err) {
 
-        res.status(500).json({ messenger: err });
+        res.status(500).json({ message: err });
     }
 };
 export const login = async (req, res) => {
@@ -56,7 +59,14 @@ export const login = async (req, res) => {
         if (!match) {
             return res.status(400).json({ message: "Mật khẩu không đúng" });
         }
-        return res.json({ user });
+        const token = jwt.sign({ id: user._id }, SECRET_CODE, { expiresIn: "1d" });
+        user.password = undefined;
+        return res.status(200).json({
+            message: "Đăng nhập thành công",
+            accessToken: token,
+            user,
+        });
+
     } catch (err) {
         res.status(500).json({ message: err });
     }

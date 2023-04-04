@@ -1,16 +1,26 @@
 import Joi from "joi";
 const schema = Joi.object({
-    name: Joi.string().required()
+    nameProducts: Joi.string().required()
         .messages(
             { "string.empty": "Không được để trống" },
             { "any.required": "Bắt buộc" }
         ),
-    price: Joi.string().required()
+    priceProducts: Joi.number().required()
         .messages(
             { "string.empty": "Không được để trống" },
             { "any.required": "Bắt buộc" }
         ),
-    description: Joi.string().required()
+    descriptionProducts: Joi.string().required()
+        .messages(
+            { "string.empty": "Không được để trống" },
+            { "any.required": "Bắt buộc" }
+        ),
+    Old_priceProducts: Joi.number().required()
+        .messages(
+            { "string.empty": "Không được để trống" },
+            { "any.required": "Bắt buộc" }
+        ),
+    imagesProducts: Joi.string().required()
         .messages(
             { "string.empty": "Không được để trống" },
             { "any.required": "Bắt buộc" }

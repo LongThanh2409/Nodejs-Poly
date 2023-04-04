@@ -7,4 +7,4 @@ const userSchems = new mongoose.Schema({
     email: { type: String, require: true },
     role: { type: String, default: "member" }
 })
-export const User = mongoose.model("User", userSchems)
+export default mongoose.model("User", userSchems)
