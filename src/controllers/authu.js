@@ -7,40 +7,42 @@ dotenv.config();
 const { SECRET_CODE } = process.env;
 export const user_sigup = async (req, res) => {
 
-
     try {
-
-        const { name, email, password } = req.body;
+        // validate đầu vào
         const { error } = schema_sigup.validate(req.body, { abortEarly: false });
         if (error) {
-            const errors = error.details.map(err => err.message)
-            return res.status(400).json({ message: errors });
-        }
-        // check email đã tồn tại
-        const usesrs = await User.findOne({ email });
-        if (usesrs) {
-            return res.send({
-                message: "Email đã tồn tại"
-            })
-        }
-        // Dùng bcrypt để mã hoá
-        const hashedPassword = await bcrypt.hash(password, 10);
-        // const { data: product } = await axios.post(`${API_URI}`, req.body);
-        const user = await User.create(
-            { name, email, password: hashedPassword }
-        );
-        if (!user) {
-            res.send({
-                messenger: "Thêm sản phẩm không thành công",
+            const errors = error.details.map((err) => err.message);
+
+            return res.status(400).json({
+                messages: errors,
             });
         }
+        // Kiểm tra trong db có tk không?
+        const userExist = await User.findOne({ email: req.body.email });
+        if (userExist) {
+            return res.status(400).json({
+                messages: "Email đã tồn tại",
+            });
+        }
+        // Mã hóa mật khẩu
 
-        return res.json(user);
-    } catch (err) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        res.status(500).json({ message: err });
-    }
+        const user = await User.create({
+            ...req.body,
+            password: hashedPassword,
+        });
+
+        const token = jwt.sign({ id: user._id }, SECRET_CODE, { expiresIn: "1d" });
+        user.password = undefined;
+        return res.status(201).json({
+            message: "Tạo tài khoản thành công",
+            accessToken: token,
+            ...user,
+        });
+    } catch (error) { }
 };
+
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;

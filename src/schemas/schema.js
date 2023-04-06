@@ -25,6 +25,7 @@ const schema = Joi.object({
             { "string.empty": "Không được để trống" },
             { "any.required": "Bắt buộc" }
         ),
+    categoryId: Joi.string().required(),
     // username: Joi.string().required(),
     // email: Joi.string().required()
 });

@@ -8,6 +8,12 @@ const categorySchema = new Schema(
             require: true,
             minLength: 3,
         },
+        products: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Product",
+            },
+        ],
     },
     {
         timestamps: true,
@@ -15,4 +21,4 @@ const categorySchema = new Schema(
     }
 );
 
-export default mongoose.model("Category", categorySchema);
+export const Category = mongoose.model("Category", categorySchema);

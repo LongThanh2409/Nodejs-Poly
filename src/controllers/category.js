@@ -1,5 +1,6 @@
-import Category from "../models/category";
+
 import { categorySchema } from "../schemas/category";
+import { Category } from "../models/category";
 export const getAll = async (req, res) => {
     try {
         const categories = await Category.find();
@@ -8,7 +9,7 @@ export const getAll = async (req, res) => {
                 messenger: "Danh sách category trống",
             });
         }
-        return res.status(200).json(categories);
+        return res.json(categories);
     } catch (err) {
         res.status(500).json({ messenger: err });
     }
@@ -29,9 +30,14 @@ export const getDetail = async (req, res) => {
 };
 
 export const create = async (req, res) => {
+    const { error } = categorySchema.validate(req.body, { abortEarly: false });
+    if (error) {
+        const errors = error.details.map(err => err.message)
+        return res.status(400).json({ message: errors });
+    }
     try {
-        const validate = categorySchema.validate(req.body);
-        console.log("validate: ", validate);
+
+        // console.log("validate: ", validate);
         const category = await Category.create(req.body);
         if (!category) {
             res.send({
@@ -46,7 +52,7 @@ export const create = async (req, res) => {
 
 export const remove = async (req, res) => {
     try {
-        const category = await Category.delete(req.params.id);
+        const category = await Category.findByIdAndDelete(req.params.id);
         return res.status(200).json({
             message: "Category đã được xóa thành công",
             data: category,
@@ -60,6 +66,8 @@ export const remove = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
+        const validate = categorySchema.validate(req.body);
+        console.log("validate: ", validate);
         const category = await Category.findByIdAndUpdate(req.params.id, req.body);
         if (!category) {
             res.send({

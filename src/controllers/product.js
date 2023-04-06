@@ -9,7 +9,7 @@ export const getAll = async (req, res) => {
         // const { data: products } = await axios.get(
         //     `${API_URI}`
         // );
-        const products = await Product.find();
+        const products = await Product.find().populate("categoryId");;
         if (products.length === 0) {
             res.send({
                 messenger: "Danh sách sản phẩm trống",
@@ -24,7 +24,7 @@ export const getAll = async (req, res) => {
 export const getDetail = async (req, res) => {
     try {
         // const { data: product } = await axios.get(`${API_URI}${req.params.id}`);
-        const product = await Product.findById(req.params.id);
+        const product = await Product.findById(req.params.id).populate("categoryId");;
         if (!product) {
             res.send({
                 messenger: "Không tìm thấy sản phẩm",
@@ -67,6 +67,7 @@ export const remove = async (req, res) => {
         const products = await Product.findByIdAndDelete(req.params.id);
         return res.status(200).json({
             message: "Sản phẩm đã được xóa thành công",
+            data: products
         });
     } catch (error) {
         if (error.name === "CastError") {
