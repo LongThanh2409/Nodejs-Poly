@@ -12,9 +12,9 @@ const router = express.Router();
 
 router.get("/", getAll);
 router.get("/:id", getDetail);
-router.post("/", checkPermission, create);
-router.put("/:id", checkPermission, update);
-router.delete("/:id", checkPermission, remove);
-router.patch("/:id", checkPermission, PatchUser);
+router.post("/", create);
+router.put("/:id", update);
+router.delete("/:id", remove);
+router.patch("/:id", PatchUser);
 
 export default router;

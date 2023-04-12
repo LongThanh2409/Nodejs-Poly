@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs"
 import { schema_sigup, schema_login } from "../schemas/schema_user.js"
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import { User } from "../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
 const { SECRET_CODE } = process.env;
@@ -31,6 +31,7 @@ export const user_sigup = async (req, res) => {
         const user = await User.create({
             ...req.body,
             password: hashedPassword,
+
         });
 
         const token = jwt.sign({ id: user._id }, SECRET_CODE, { expiresIn: "1d" });

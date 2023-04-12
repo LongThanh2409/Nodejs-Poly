@@ -1,6 +1,8 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import { schema } from "../schemas/schema.js"
+import { categorySchema } from "../schemas/category";
+import { Category } from "../models/category";
 dotenv.config();
 
 import { Product } from "../models/product";
@@ -9,9 +11,9 @@ export const getAll = async (req, res) => {
         // const { data: products } = await axios.get(
         //     `${API_URI}`
         // );
-        const products = await Product.find().populate("categoryId");;
+        const products = await Product.find()
         if (products.length === 0) {
-            res.send({
+            return res.status(400).json({
                 messenger: "Danh sách sản phẩm trống",
             });
         }
@@ -24,7 +26,7 @@ export const getAll = async (req, res) => {
 export const getDetail = async (req, res) => {
     try {
         // const { data: product } = await axios.get(`${API_URI}${req.params.id}`);
-        const product = await Product.findById(req.params.id).populate("categoryId");;
+        const product = await Product.findById(req.params.id)
         if (!product) {
             res.send({
                 messenger: "Không tìm thấy sản phẩm",
@@ -54,6 +56,7 @@ export const create = async (req, res) => {
                 messenger: "Thêm sản phẩm không thành công",
             });
         }
+
         return res.json(products);
     } catch (err) {
 
