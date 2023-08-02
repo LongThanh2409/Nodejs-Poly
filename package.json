@@ -2,7 +2,7 @@
   "name": "cd",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "dev": "vite"
@@ -28,6 +28,7 @@
     "mongoose": "^7.0.2",
     "nodemon": "^2.0.21",
     "nvm": "^0.0.4",
+    "vercel": "^31.2.1",
     "vite": "^4.2.1",
     "vite-plugin-node": "^3.0.2"
   }

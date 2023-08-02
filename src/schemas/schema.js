@@ -1,6 +1,6 @@
 import Joi from "joi";
 const schema = Joi.object({
-    nameProducts: Joi.string().required()
+    nameProducts: Joi.string().trim().regex(/^\S.*\S$/).required()
         .messages(
             { "string.empty": "Không được để trống" },
             { "any.required": "Bắt buộc" }
